@@ -1,0 +1,9 @@
+[submodule "backend"]
+	path = backend
+	url = https://github.com/paiksunggum/com.ragwatson.api.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/paiksunggum/com.paiksunggum.www.git
+[submodule "docs"]
+	path = docs
+	url = https://github.com/paiksunggum/com.paiksunggum.docs.git
