@@ -1,0 +1,37 @@
+---
+description: Titanic 백엔드 SOLID·ABC ports·헥사고날 레이어 규칙
+globs: backend/apps/titanic/**/*.py
+alwaysApply: false
+---
+
+# Titanic — SOLID & 추상 ports
+
+## ports = 계약만
+
+- `app/ports/input/*_use_case.py`: `JamesCommandUseCase`, `WalterQueryUseCase` 등 **ABC만**
+- `app/ports/output/*_repository.py`: **ABC만**
+- `@abstractmethod` 본문은 `...` — **구현·DI·로깅·`*Impl` 금지**
+- **로깅**: `ports/` 금지. prefix는 구현 클래스명만 (`JamesCommand`, `WalterPgRepository`). `*UseCase`/ABC 이름 사용 금지. 다음 레이어로 **넘길 때**만 (return 경로 중복 로그 지양)
+- 추상 메서드에는 **`self` 없음**; `use_cases`·`adapter` 구현에는 `self` 유지
+- **`Protocol` 사용하지 않음** — James/Walter와 같이 `ABC`
+
+## 구현 위치
+
+- 유스케이스: `app/use_cases/` (예: `JamesCommand`, `WalterPassengerQuery`) — input port 구현
+- 인바운드: `adapter/inbound/` — CSV/HTTP, `Depends`로 use case 주입
+- 아웃바운드: `adapter/outbound/` — output port 구현 (`JamesPgRepository`, `WalterPgRepository`)
+
+## 의존 방향
+
+```
+router → *UseCase (ABC) → use_cases → *Repository (ABC) → adapter/outbound
+```
+
+라우터가 `JamesPgRepository` 등 **구현 adapter를 직접 호출하지 않는다.**
+
+## 참고 (현재 모듈)
+
+- James: `upload_passengers(records)` — command
+- Walter: `get_passengers(page, page_size, db)` — query
+
+새 기능 추가 시 동일 패턴으로 input/output port를 나누고, 구현은 ports 밖에 둔다.
