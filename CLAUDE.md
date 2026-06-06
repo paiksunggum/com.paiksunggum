@@ -1,7 +1,63 @@
 # LLM 코딩 행동 지침
 
-
 > **트레이드오프:** 신중함을 속도보다 우선한다. 사소한 작업은 상황에 맞게 판단한다.
+
+---
+
+## 0. 이 프로젝트에서 가장 먼저 알아야 할 맥락
+
+### 프로젝트 성격
+- **학습 프로젝트**: SOLID 원칙 · 헥사고날 아키텍처 · 클린 아키텍처를 **배우며 적용하는 과정**이다.
+- 아직 구조가 완벽하지 않고 과도기적 코드가 많다. 분석 시 이 점을 감안한다.
+- 사용자가 질문하면, 아키텍처 규칙을 올바르게 학습하고 적용할 수 있도록 **친절하게 가이드**하며 코딩을 돕는다.
+- **다중 환경**: 집, 학원 등 여러 컴퓨터에서 동일한 맥락으로 개발한다. 이 파일이 모든 환경의 공통 컨텍스트다.
+
+### 프로젝트 구조 (모노레포 + 서브모듈)
+```
+com.paiksunggum/              ← 루트 (git: com.ragwatson)
+├── backend/                  ← 서브모듈 (com.ragwatson.api) — FastAPI / Python
+│   ├── main.py               ← 앱 진입점 (12개 이상 라우터 마운트)
+│   ├── run.py                ← 로컬 개발 서버 실행기
+│   ├── core/matrix/          ← 공통 인프라 (DB 연결, API 키)
+│   └── apps/                 ← 도메인별 모듈
+│       ├── titanic/          ← 헥사고날 + SOLID 기준 구현 (레퍼런스)
+│       ├── friday13th/       ← 인증 (헥사고날 + SOLID 적용 중)
+│       ├── sports/           ← 계층형 구조 (Controller→Service→Repo)
+│       ├── admin/            ← 계층형 구조
+│       ├── chat/             ← Gemini 연동
+│       └── weather/ vision/ social_network/ ...
+├── frontend/                 ← 서브모듈 (com.paiksunggum.www) — Next.js 14 / React
+│   └── app/                  ← Next.js App Router
+└── docs/                     ← 서브모듈 (com.paiksunggum.docs) — 코딩 규칙 문서
+    ├── README.md             ← 규칙 라우팅 인덱스 (구현 전 반드시 확인)
+    ├── DevOps/Backend/       ← FASTAPI_RULES.md, ENTITY_RULE.md, ERD 문서
+    └── DevOps/Frontend/      ← REACT_RULES.md
+```
+
+**기술 스택:**
+- Backend: Python · FastAPI · SQLAlchemy 2.0 async · SQLModel · Alembic · PostgreSQL (Neon)
+- Frontend: Next.js 14 · React 18 · TypeScript · Tailwind CSS · Radix UI
+- LLM 연동: Google Generative AI (Gemini)
+
+---
+
+## 0-A. 규칙 문서 참조 절차 (구현 전 필수)
+
+백엔드·프론트엔드 코드를 작성·수정하기 전에:
+
+1. `docs/README.md` 를 읽어 이번 작업에 해당하는 규칙 문서를 확인한다.
+2. 해당 문서를 열어 내용을 인지한 뒤 구현한다. 추측으로 규칙을 대체하지 않는다.
+
+| 작업 영역 | 반드시 읽을 문서 |
+|-----------|----------------|
+| 백엔드 공통 | `docs/DevOps/Backend/FASTAPI_RULES.md` |
+| DB 모델/마이그레이션 | `docs/DevOps/Backend/ENTITY_RULE.md` |
+| titanic 모듈 | `docs/타이타닉개발/fastapi_project_context.md` |
+| 프론트엔드 | `docs/DevOps/Frontend/REACT_RULES.md` |
+
+**규칙 우선순위:** `docs/**` 문서 > 이 파일(CLAUDE.md) > 기존 코드 스타일
+
+---
 
 ## 1. 구현 전 사고 (Think Before Coding)
 
@@ -20,11 +76,11 @@
 
 - 요청받지 않은 기능은 넣지 않는다.
 - 일회성 코드를 위해 추상화 계층을 만들지 않는다.
-- 요청받지 않은 “유연함”이나 “설정 가능성”은 넣지 않는다.
+- 요청받지 않은 "유연함"이나 "설정 가능성"은 넣지 않는다.
 - 현실적으로 일어날 수 없는 상황을 위한 예외 처리는 하지 않는다.
 - 200줄로 썼는데 50줄로 될 수 있으면 다시 쓴다.
 
-스스로에게 묻는다: “시니어 엔지니어가 보기에 이 코드가 지나치게 복잡하다고 할까?” 그렇다면 단순화한다.
+스스로에게 묻는다: "시니어 엔지니어가 보기에 이 코드가 지나치게 복잡하다고 할까?" 그렇다면 단순화한다.
 
 ## 3. 정밀한 수정 (Surgical Changes)
 
@@ -32,7 +88,7 @@
 
 기존 코드를 편집할 때:
 
-- 인접한 코드·주석·포맷을 “개선”하지 않는다.
+- 인접한 코드·주석·포맷을 "개선"하지 않는다.
 - 망가지지 않은 부분은 리팩터링하지 않는다.
 - 스타일이 마음에 안 들어도 기존 스타일을 따른다.
 - 작업과 무관한 데드 코드를 발견하면 말만 하고, 임의로 지우지 않는다.
@@ -50,9 +106,9 @@
 
 작업을 검증 가능한 목표로 바꾼다:
 
-- “유효성 검사 추가” → “잘못된 입력에 대한 테스트를 쓰고, 통과시킨다”
-- “버그 수정” → “재현 테스트를 쓰고, 통과시킨다”
-- “X 리팩터링” → “전후로 테스트가 통과하는지 확인한다”
+- "유효성 검사 추가" → "잘못된 입력에 대한 테스트를 쓰고, 통과시킨다"
+- "버그 수정" → "재현 테스트를 쓰고, 통과시킨다"
+- "X 리팩터링" → "전후로 테스트가 통과하는지 확인한다"
 
 다단계 작업은 짧은 계획을 적는다:
 
@@ -62,9 +118,175 @@
 3. [단계] → 검증: [확인 사항]
 ```
 
-성공 기준이 분명해야 같은 루프를 독립적으로 돌릴 수 있다. “작동하게만 만들기”처럼 애매한 기준은 불필요한 재질의를 부른다.
+---
+
+## 5. 백엔드 아키텍처 규칙
+
+### 5-A. 헥사고날 + SOLID (titanic / friday13th 기준)
+
+```
+HTTP Request
+  ↓
+adapter/inbound/api/v1/{domain}_router.py   ← HTTP만, UseCase 주입
+  ↓ (추상 포트)
+app/ports/input/{domain}_use_case.py        ← ABC 계약만 (구현 없음)
+  ↓
+app/use_cases/{domain}_interactor.py        ← 비즈니스 로직 구현
+  ↓ (추상 포트)
+app/ports/output/{domain}_repository.py    ← ABC 계약만 (구현 없음)
+  ↓
+adapter/outbound/pg/{domain}_pg_repository.py ← DB 구현
+  ↓
+adapter/outbound/orm/{entity}_orm.py        ← SQLAlchemy ORM 모델
+```
+
+**레이어 규칙:**
+
+| 레이어 | 허용 | 금지 |
+|--------|------|------|
+| `app/ports/input/` | `ABC` + `@abstractmethod`만 | 구현, 로깅, `*Impl` 클래스 |
+| `app/ports/output/` | `ABC` + `@abstractmethod`만 | 구현, 로깅 |
+| `app/use_cases/` | input port 상속, output port 호출 | 직접 DB 접근 |
+| `adapter/inbound/` | HTTP 파싱, DI로 use case 주입 | PgRepository 직접 호출 |
+| `adapter/outbound/` | output port ABC 상속, DB I/O | 비즈니스 로직 |
+
+**포트 규칙:**
+- 포트 추상 메서드에는 `self` 없음; use_cases·adapter 구현에는 `self` 유지
+- `Protocol` 사용 안 함 — `ABC` 사용
+- 로그 prefix는 **구현 클래스명만** (`JamesCommand`, `JamesPgRepository`)
+- 로그는 레이어 간 **데이터 넘길 때만** (포트 내 로그 금지, return 경로 중복 금지)
+
+**SOLID 대응표:**
+
+| 원칙 | 적용 방식 |
+|------|----------|
+| **S** (단일 책임) | 라우터=HTTP, 인터랙터=오케스트레이션, 어댑터=I/O |
+| **O** (개방-폐쇄) | DB 변경 시 `adapter/outbound`만 교체 |
+| **L** (리스코프) | 어댑터 구현이 포트 계약을 그대로 이행 |
+| **I** (인터페이스 분리) | command/query 포트 분리 (James=쓰기, Walter=읽기) |
+| **D** (의존성 역전) | 상위 레이어는 구체 클래스가 아닌 추상 포트에 의존 |
+
+**의존성 주입 예시:**
+```python
+# dependencies/{domain}_command.py
+def get_james_command_use_case(db: AsyncSession = Depends(get_db)) -> JamesCommandUseCase:
+    repository: JamesRepository = JamesPgRepository(session=db)
+    return JamesCommandInteractor(repository=repository)
+```
+
+### 5-B. 계층형 구조 (sports / admin — 단순 모듈)
+
+```
+Router → Controller → Service → Repository → SQLModel
+```
+
+- 라우터: HTTP만, Controller DI 호출
+- Controller: `self.service` 보유, 메서드는 service에 한 줄 위임
+- Service: reader·model 조합, 유스케이스당 메서드 하나
+- Repository: DB I/O만
+
+### 5-C. 엔티티 / DB 규칙
+
+```python
+class Example(SQLModel, table=True):
+    __tablename__ = "examples"
+
+    id: int | None = Field(
+        default=None,
+        primary_key=True,
+        sa_column_kwargs={"name": "id"},
+    )
+```
+
+- **모든 테이블 PK는 `id: int` (자동 증감)**
+- PK를 `user_id`, `uuid`, `pk` 등 다른 이름으로 두지 않는다
+- 비즈니스 식별자(`user_id`, `email`)는 유니크·인덱스 컬럼으로 별도 정의
+- 외래 키 컬럼명: `{엔티티}_id` 형태 (예: `user_id`)
+
+### 5-D. 네이밍 컨벤션 (캐릭터 이름 기반)
+
+Titanic 모듈에서 역할에 캐릭터 이름을 부여한다:
+
+| 캐릭터 | 역할 |
+|--------|------|
+| **James** | 쓰기(command) — CSV 업로드 등 |
+| **Walter** | 읽기(query) — 승객 조회 등 |
+
+파일 네이밍 패턴:
+
+| 레이어 | 파일명 |
+|--------|--------|
+| 라우터 | `{domain}_router.py` |
+| 스키마 | `{domain}_schema.py` |
+| 인바운드 use case (ABC) | `{domain}_use_case.py` |
+| 아웃바운드 repo (ABC) | `{domain}_repository.py` |
+| 인터랙터 (구현) | `{domain}_interactor.py` |
+| PG 리포지토리 (구현) | `{domain}_pg_repository.py` |
+| ORM | `{entity}_orm.py` |
+| DTO | `{domain}_dto.py` |
+
+---
+
+## 6. 프론트엔드 규칙
+
+### 폼 입력 — FormData (state에 넣지 않음)
+
+```tsx
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  const formData = new FormData(e.currentTarget);
+  const { userId, password } = Object.fromEntries(formData.entries());
+  // fetch ...
+};
+```
+
+### UI 상태 — 여러 useState → 객체 1개
+
+```tsx
+type PageState = { open: boolean; showPassword: boolean; };
+const [state, setState] = useState<PageState>({ open: false, showPassword: false });
+const patchState = (patch: Partial<PageState>) => setState(prev => ({ ...prev, ...patch }));
+```
+
+---
+
+## 7. Git / 서브모듈 규칙
+
+```
+backend 변경  → cd backend  && git add . && git commit
+frontend 변경 → cd frontend && git add . && git commit
+docs 변경     → cd docs     && git add . && git commit
+루트 변경     → (루트에서)      git add . && git commit
+```
+
+서브모듈 포인터 갱신 잊지 않기: 서브모듈 커밋 후 루트에서도 커밋.
+
+---
+
+## 8. 로컬 개발 서버
+
+**에이전트는 서버를 자동 실행하지 않는다.** 사용자가 명시적으로 요청한 경우에만.
+
+```bash
+# 백엔드 (backend 폴더에서)
+conda activate venv
+python run.py        # 포트 8000, Swagger: localhost:8000/docs
+
+# 프론트엔드 (frontend 폴더에서)
+npm run dev          # 포트 3000
+```
+
+---
+
+## 9. 아키텍처 학습 가이드라인
+
+이 프로젝트는 SOLID + 헥사고날 + 클린 아키텍처를 학습하는 과정이다. 코드를 작성·설명할 때:
+
+1. **왜 이 구조인지** 먼저 설명하고 코드를 제시한다.
+2. 잘못된 방향(예: 라우터에서 DB 직접 접근)이면 **어떤 원칙에 어긋나는지** 설명하고 올바른 방향을 안내한다.
+3. 새 모듈을 만들 때는 **titanic 모듈을 레퍼런스**로 제시한다.
+4. 과도기적 코드(아직 리팩터 안 된 부분)는 임의로 고치지 않고, 사용자가 학습할 준비가 됐을 때 함께 리팩터한다.
 
 ---
 
 **지침이 실제로 도움이 되는지:** diff에 불필요한 변경이 줄고, 복잡도 때문에 되돌리는 일이 줄며, 구현 전 질문으로 결정이 더 선명해지는지 본다.
-
