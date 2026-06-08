@@ -4,6 +4,6 @@
 [submodule "www"]
 	path = www
 	url = https://github.com/paiksunggum/com.paiksunggum.www.git
-[submodule "docs"]
-	path = docs
-	url = https://github.com/paiksunggum/com.paiksunggum.docs.git
+[submodule "vault"]
+	path = vault
+	url = https://github.com/paiksunggum/com.paiksunggum.vault.git
