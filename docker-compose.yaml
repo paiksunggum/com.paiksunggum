@@ -1,0 +1,39 @@
+﻿services:
+  # FastAPI 백엔드
+  api:
+    build:
+      context: ./paik        # FastAPI 폴더 위치
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"          # 내컴퓨터:8000 → 컨테이너:8000
+    volumes:
+      - ./paik:/app          # 코드 변경시 자동 반영
+    env_file:
+      - ./paik/.env
+    environment:
+      - ENABLE_API_DOCS=true
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Next.js 프론트엔드
+  web:
+    build:
+      context: ./www         # Next.js 폴더 위치
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"          # 내컴퓨터:3000 → 컨테이너:3000
+    volumes:
+      - ./www:/app
+      - web_node_modules:/app/node_modules
+    environment:
+      - CI=true
+    depends_on:
+      api:
+        condition: service_healthy  # api 헬스체크 통과 후 web 실행
+
+volumes:
+  web_node_modules:
