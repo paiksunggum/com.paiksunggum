@@ -15,20 +15,20 @@
 ### 프로젝트 구조 (모노레포 + 서브모듈)
 ```
 com.paiksunggum/              ← 루트 (git: com.ragwatson)
-├── backend/                  ← 서브모듈 (com.ragwatson.api) — FastAPI / Python
+├── paik/                     ← 서브모듈 — FastAPI / Python
 │   ├── main.py               ← 앱 진입점 (12개 이상 라우터 마운트)
 │   ├── run.py                ← 로컬 개발 서버 실행기
 │   ├── core/matrix/          ← 공통 인프라 (DB 연결, API 키)
-│   └── apps/                 ← 도메인별 모듈
+│   └── apps/                 ← 도메인별 모듈 (시블링 구조)
 │       ├── titanic/          ← 헥사고날 + SOLID 기준 구현 (레퍼런스)
 │       ├── friday13th/       ← 인증 (헥사고날 + SOLID 적용 중)
 │       ├── sports/           ← 계층형 구조 (Controller→Service→Repo)
 │       ├── admin/            ← 계층형 구조
 │       ├── chat/             ← Gemini 연동
 │       └── weather/ vision/ social_network/ ...
-├── frontend/                 ← 서브모듈 (com.paiksunggum.www) — Next.js 14 / React
+├── www/                      ← 서브모듈 — Next.js 14 / React
 │   └── app/                  ← Next.js App Router
-└── docs/                     ← 서브모듈 (com.paiksunggum.docs) — 코딩 규칙 문서
+└── docs/                     ← 서브모듈 — 코딩 규칙 문서
     ├── README.md             ← 규칙 라우팅 인덱스 (구현 전 반드시 확인)
     ├── DevOps/Backend/       ← FASTAPI_RULES.md, ENTITY_RULE.md, ERD 문서
     └── DevOps/Frontend/      ← REACT_RULES.md
@@ -52,7 +52,7 @@ com.paiksunggum/              ← 루트 (git: com.ragwatson)
 |-----------|----------------|
 | 백엔드 공통 | `docs/DevOps/Backend/FASTAPI_RULES.md` |
 | DB 모델/마이그레이션 | `docs/DevOps/Backend/ENTITY_RULE.md` |
-| titanic 모듈 | `docs/타이타닉개발/fastapi_project_context.md` |
+| titanic 모듈 | `paik/apps/titanic/_docs/fastapi_project_context.md` |
 | 프론트엔드 | `docs/DevOps/Frontend/REACT_RULES.md` |
 
 **규칙 우선순위:** `docs/**` 문서 > 이 파일(CLAUDE.md) > 기존 코드 스타일
@@ -120,143 +120,13 @@ com.paiksunggum/              ← 루트 (git: com.ragwatson)
 
 ---
 
-## 5. 백엔드 아키텍처 규칙
-
-### 5-A. 헥사고날 + SOLID (titanic / friday13th 기준)
-
-```
-HTTP Request
-  ↓
-adapter/inbound/api/v1/{domain}_router.py   ← HTTP만, UseCase 주입
-  ↓ (추상 포트)
-app/ports/input/{domain}_use_case.py        ← ABC 계약만 (구현 없음)
-  ↓
-app/use_cases/{domain}_interactor.py        ← 비즈니스 로직 구현
-  ↓ (추상 포트)
-app/ports/output/{domain}_repository.py    ← ABC 계약만 (구현 없음)
-  ↓
-adapter/outbound/pg/{domain}_pg_repository.py ← DB 구현
-  ↓
-adapter/outbound/orm/{entity}_orm.py        ← SQLAlchemy ORM 모델
-```
-
-**레이어 규칙:**
-
-| 레이어 | 허용 | 금지 |
-|--------|------|------|
-| `app/ports/input/` | `ABC` + `@abstractmethod`만 | 구현, 로깅, `*Impl` 클래스 |
-| `app/ports/output/` | `ABC` + `@abstractmethod`만 | 구현, 로깅 |
-| `app/use_cases/` | input port 상속, output port 호출 | 직접 DB 접근 |
-| `adapter/inbound/` | HTTP 파싱, DI로 use case 주입 | PgRepository 직접 호출 |
-| `adapter/outbound/` | output port ABC 상속, DB I/O | 비즈니스 로직 |
-
-**포트 규칙:**
-- 포트 추상 메서드에는 `self` 없음; use_cases·adapter 구현에는 `self` 유지
-- `Protocol` 사용 안 함 — `ABC` 사용
-- 로그 prefix는 **구현 클래스명만** (`JamesCommand`, `JamesPgRepository`)
-- 로그는 레이어 간 **데이터 넘길 때만** (포트 내 로그 금지, return 경로 중복 금지)
-
-**SOLID 대응표:**
-
-| 원칙 | 적용 방식 |
-|------|----------|
-| **S** (단일 책임) | 라우터=HTTP, 인터랙터=오케스트레이션, 어댑터=I/O |
-| **O** (개방-폐쇄) | DB 변경 시 `adapter/outbound`만 교체 |
-| **L** (리스코프) | 어댑터 구현이 포트 계약을 그대로 이행 |
-| **I** (인터페이스 분리) | command/query 포트 분리 (James=쓰기, Walter=읽기) |
-| **D** (의존성 역전) | 상위 레이어는 구체 클래스가 아닌 추상 포트에 의존 |
-
-**의존성 주입 예시:**
-```python
-# dependencies/{domain}_command.py
-def get_james_command_use_case(db: AsyncSession = Depends(get_db)) -> JamesCommandUseCase:
-    repository: JamesRepository = JamesPgRepository(session=db)
-    return JamesCommandInteractor(repository=repository)
-```
-
-### 5-B. 계층형 구조 (sports / admin — 단순 모듈)
-
-```
-Router → Controller → Service → Repository → SQLModel
-```
-
-- 라우터: HTTP만, Controller DI 호출
-- Controller: `self.service` 보유, 메서드는 service에 한 줄 위임
-- Service: reader·model 조합, 유스케이스당 메서드 하나
-- Repository: DB I/O만
-
-### 5-C. 엔티티 / DB 규칙
-
-```python
-class Example(SQLModel, table=True):
-    __tablename__ = "examples"
-
-    id: int | None = Field(
-        default=None,
-        primary_key=True,
-        sa_column_kwargs={"name": "id"},
-    )
-```
-
-- **모든 테이블 PK는 `id: int` (자동 증감)**
-- PK를 `user_id`, `uuid`, `pk` 등 다른 이름으로 두지 않는다
-- 비즈니스 식별자(`user_id`, `email`)는 유니크·인덱스 컬럼으로 별도 정의
-- 외래 키 컬럼명: `{엔티티}_id` 형태 (예: `user_id`)
-
-### 5-D. 네이밍 컨벤션 (캐릭터 이름 기반)
-
-Titanic 모듈에서 역할에 캐릭터 이름을 부여한다:
-
-| 캐릭터 | 역할 |
-|--------|------|
-| **James** | 쓰기(command) — CSV 업로드 등 |
-| **Walter** | 읽기(query) — 승객 조회 등 |
-
-파일 네이밍 패턴:
-
-| 레이어 | 파일명 |
-|--------|--------|
-| 라우터 | `{domain}_router.py` |
-| 스키마 | `{domain}_schema.py` |
-| 인바운드 use case (ABC) | `{domain}_use_case.py` |
-| 아웃바운드 repo (ABC) | `{domain}_repository.py` |
-| 인터랙터 (구현) | `{domain}_interactor.py` |
-| PG 리포지토리 (구현) | `{domain}_pg_repository.py` |
-| ORM | `{entity}_orm.py` |
-| DTO | `{domain}_dto.py` |
-
----
-
-## 6. 프론트엔드 규칙
-
-### 폼 입력 — FormData (state에 넣지 않음)
-
-```tsx
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  const formData = new FormData(e.currentTarget);
-  const { userId, password } = Object.fromEntries(formData.entries());
-  // fetch ...
-};
-```
-
-### UI 상태 — 여러 useState → 객체 1개
-
-```tsx
-type PageState = { open: boolean; showPassword: boolean; };
-const [state, setState] = useState<PageState>({ open: false, showPassword: false });
-const patchState = (patch: Partial<PageState>) => setState(prev => ({ ...prev, ...patch }));
-```
-
----
-
 ## 7. Git / 서브모듈 규칙
 
 ```
-backend 변경  → cd backend  && git add . && git commit
-frontend 변경 → cd frontend && git add . && git commit
-docs 변경     → cd docs     && git add . && git commit
-루트 변경     → (루트에서)      git add . && git commit
+paik 변경   → cd paik && git add . && git commit
+www 변경    → cd www  && git add . && git commit
+docs 변경   → cd docs && git add . && git commit
+루트 변경   → (루트에서) git add . && git commit
 ```
 
 서브모듈 포인터 갱신 잊지 않기: 서브모듈 커밋 후 루트에서도 커밋.
@@ -268,11 +138,11 @@ docs 변경     → cd docs     && git add . && git commit
 **에이전트는 서버를 자동 실행하지 않는다.** 사용자가 명시적으로 요청한 경우에만.
 
 ```bash
-# 백엔드 (backend 폴더에서)
+# 백엔드 (paik 폴더에서)
 conda activate venv
 python run.py        # 포트 8000, Swagger: localhost:8000/docs
 
-# 프론트엔드 (frontend 폴더에서)
+# 프론트엔드 (www 폴더에서)
 npm run dev          # 포트 3000
 ```
 
@@ -286,6 +156,13 @@ npm run dev          # 포트 3000
 2. 잘못된 방향(예: 라우터에서 DB 직접 접근)이면 **어떤 원칙에 어긋나는지** 설명하고 올바른 방향을 안내한다.
 3. 새 모듈을 만들 때는 **titanic 모듈을 레퍼런스**로 제시한다.
 4. 과도기적 코드(아직 리팩터 안 된 부분)는 임의로 고치지 않고, 사용자가 학습할 준비가 됐을 때 함께 리팩터한다.
+
+---
+
+## 하위 CLAUDE.md 링크
+
+- 백엔드 → [[_claude/CLAUDE]]
+- 프론트엔드 → [[www/CLAUDE]]
 
 ---
 
