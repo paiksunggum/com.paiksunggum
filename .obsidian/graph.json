@@ -1,6 +1,6 @@
 {
   "collapse-filter": false,
-  "search": "",
+  "search": "-file:README",
   "showTags": false,
   "showAttachments": false,
   "hideUnresolved": true,
@@ -8,31 +8,24 @@
   "collapse-color-groups": false,
   "colorGroups": [
     {
-      "query": "path:paik/apps/titanic",
+      "query": "path:vault/paik  ",
       "color": {
         "a": 1,
-        "rgb": 16744448
+        "rgb": 16127
       }
     },
     {
-      "query": "path:paik",
+      "query": "path:paik/apps/titanic/_docs  ",
       "color": {
         "a": 1,
-        "rgb": 4491519
+        "rgb": 16127
       }
     },
     {
-      "query": "path:www",
+      "query": "path:vault/www ",
       "color": {
         "a": 1,
-        "rgb": 52292
-      }
-    },
-    {
-      "query": "path:vault",
-      "color": {
-        "a": 1,
-        "rgb": 16766720
+        "rgb": 14048348
       }
     }
   ],
@@ -46,6 +39,6 @@
   "repelStrength": 10,
   "linkStrength": 1,
   "linkDistance": 250,
-  "scale": 0.5087618855792501,
+  "scale": 0.50876188557925,
   "close": false
 }

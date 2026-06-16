@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "485ce460f506df43",
+        "id": "4c6b3e76122bdac7",
         "type": "tabs",
         "children": [
           {
-            "id": "7d55cb4a508cd799",
+            "id": "cc005cb45445e69f",
             "type": "leaf",
             "state": {
               "type": "graph",
@@ -74,7 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 204.5
+    "width": 294.5
   },
   "right": {
     "id": "eeaef85795e81fa8",
@@ -179,38 +179,41 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "7d55cb4a508cd799",
+  "active": "cc005cb45445e69f",
   "lastOpenFiles": [
-    "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.133638521763520",
-    "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.137762478978752",
-    "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.126854552762048",
-    "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.140425507452176",
-    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.129117367105504",
-    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.134057341827472",
-    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.140298100160912",
-    "vault/Pasted image 20260615164816.png",
-    "vault/Pasted image 20260615164532.png",
-    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.129549998192608",
-    "paik/apps/titanic/app/use_cases/passenger_jack_trainer_interactor.py.tmp.11396.78fd28f52f6a",
-    "vault/Pasted image 20260615164412.png",
-    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.130795872008592",
-    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.126241323350416",
-    "vault/Pasted image 20260615164247.png",
-    "vault/Pasted image 20260615164051.png",
-    "vault/Pasted image 20260615164044.png",
-    "vault/Pasted image 20260615164000.png",
-    "vault/Pasted image 20260615163917.png",
-    "vault/Pasted image 20260615163844.png",
-    "vault/Pasted image 20260615163717.png",
+    "paik/apps/titanic/adapter/inbound/api/v1/__pycache__/passenger_jack_trainer_router.cpython-313.pyc.126268622536896",
+    "paik/apps/titanic/adapter/inbound/api/v1/__pycache__/passenger_cal_tester_router.cpython-313.pyc.126268623761984",
+    "paik/apps/titanic/app/use_cases/__pycache__/passenger_cal_tester_interactor.cpython-313.pyc.126268623761408",
+    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.126268623754928",
+    "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.126268623752480",
+    "paik/apps/titanic/app/use_cases/crew_smith_captain_interactor.py.tmp.21124.7b1dddc3953a",
+    "paik/apps/titanic/app/use_cases/__pycache__/crew_andrew_blueprint_interactor.cpython-313.pyc.124759616292448",
+    "paik/apps/titanic/app/ports/input/__pycache__/crew_andrew_blueprint_use_case.cpython-313.pyc.124759616292160",
+    "paik/apps/titanic/app/use_cases/passenger_cal_tester_interactor.py.tmp.21124.5bb5c16438e7",
+    "paik/apps/titanic/adapter/inbound/api/v1/passenger_jack_trainer_router.py.tmp.21124.8974410dab71",
+    "paik/apps/titanic/app/use_cases/crew_andrew_blueprint_interactor.py.tmp.21124.33a7efe7d507",
+    "vault/Pasted image 20260616162304.png",
+    "vault/Pasted image 20260616162245.png",
+    "vault/Pasted image 20260616155708.png",
+    "vault/Pasted image 20260616155705.png",
+    "vault/Pasted image 20260616155332.png",
+    "vault/Pasted image 20260616154843.png",
+    "vault/Pasted image 20260616154634.png",
+    "vault/Pasted image 20260616145925.png",
+    "vault/Pasted image 20260616145741.png",
+    "vault/Pasted image 20260616145537.png",
+    "paik/apps/titanic/_docs/CLAUDE.md",
+    "paik/apps/titanic/_docs/titanic-algorithm.md",
+    "vault/paik/CLAUDE.md",
+    "vault/www/CLAUDE.md",
+    "CLAUDE.md",
     "paik/apps/titanic/_docs/titanic-casting.md",
     "paik/apps/admin/_docs/admin-casting.md",
     "paik/_claude/CLAUDE.md",
     "paik/CLAUDE.md",
     "paik/README.md",
-    "CLAUDE.md",
     "paik/_claude/ENTITY_RULE.md",
     "CURSOR.md",
-    "paik/apps/titanic/_docs/CLAUDE.md",
     "www/CLAUDE.md",
     "paik/apps/titanic/_docs/FORMA_ERD.md",
     "paik/apps/titanic/_docs/fastapi_project_context.md",
@@ -223,9 +226,6 @@
     "vault/frontend/FASTAPI_RULES.md",
     "vault/97-wiki/REACT_RULES.md",
     "vault/94-wiki/REACT_RULES.md",
-    "vault/94-wiki/TITANIC_ERD.md",
-    "vault/94-wiki/FORMA_ERD.md",
-    "vault/97-wiki/FASTAPI_RULES.md",
-    "vault/환영합니다.md"
+    "vault/94-wiki/TITANIC_ERD.md"
   ]
 }
