@@ -29,8 +29,11 @@
     volumes:
       - ./www:/app
       - web_node_modules:/app/node_modules
+    env_file:
+      - ./paik/.env          # GEMINI_API_KEY 등 공유 키
     environment:
       - CI=true
+      - BACKEND_URL=http://api:8000  # Docker 내부 네트워크로 FastAPI 연결
     depends_on:
       api:
         condition: service_healthy  # api 헬스체크 통과 후 web 실행
