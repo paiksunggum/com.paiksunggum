@@ -59,6 +59,22 @@ com.paiksunggum/              ← 루트 (git: com.ragwatson)
 
 ---
 
+## 0-B. 문서(MD) 위치 규칙
+
+새 문서를 만들거나 기존 문서를 옮길 때 아래 규칙을 따른다.
+
+| 문서 성격 | 위치 |
+|-----------|------|
+| 프로젝트 공통 (AI 지침, Git, 운영 규칙 등) | `_docs/` (루트) |
+| 백엔드 (FastAPI, DB, 아키텍처 등) | `paik/_docs/` |
+| 프론트엔드 (React, Next.js 등) | `www/_docs/` |
+| 모바일/Flutter | `taper/_docs/` |
+
+- 도메인별 세부 문서는 해당 앱 폴더 안 `_docs/`에 둔다 (예: `paik/apps/titanic/_docs/`).
+- 루트 `CLAUDE.md`, `CURSOR.md` 등 AI 하네스 파일은 루트에 직접 둔다 (툴이 자동으로 읽는 위치).
+
+---
+
 ## 1. 구현 전 사고 (Think Before Coding)
 
 **가정하지 않는다. 모호함을 숨기지 않는다. 트레이드오프를 드러낸다.**
