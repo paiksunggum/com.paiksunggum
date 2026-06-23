@@ -74,7 +74,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 294.5
+    "width": 203.5
   },
   "right": {
     "id": "eeaef85795e81fa8",
@@ -179,8 +179,25 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "cc005cb45445e69f",
+  "active": "563ffe7d8a4caf73",
   "lastOpenFiles": [
+    "_docs",
+    "www/_docs/REACT_RULES.md",
+    "www/_docs/graph-color-groups.md",
+    "www/_docs/code_graph.md",
+    "www/_docs/CLAUDE.md",
+    "paik/_docs/scaffold-rules.md",
+    "paik/_docs/FASTAPI_RULES.md",
+    "paik/_docs/entity-rules.md",
+    "paik/_docs/db-rules.md",
+    "paik/_docs/CLAUDE.md",
+    "paik/_docs/auth-rules.md",
+    "paik/_docs/app-rules.md",
+    "taper/CLAUDE.md",
+    "taper/_docs",
+    "taper/_앷ㄴ",
+    "paik/_docs",
+    "vault/andrew 클린 구조/클린 구조 연습.md",
     "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.125831894699152",
     "paik/apps/titanic/app/use_cases/crew_smith_captain_interactor.py.tmp.16648.cdaf5db43cca",
     "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.127484743061776",
@@ -188,10 +205,6 @@
     "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.132949988135040",
     "paik/apps/titanic/app/use_cases/passenger_jack_trainer_interactor.py.tmp.16648.a69c14826c01",
     "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.133110105705616",
-    "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.126038281703552",
-    "paik/apps/titanic/app/use_cases/passenger_jack_trainer_interactor.py.tmp.16648.0fd8390a0219",
-    "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.126863535148032",
-    "paik/apps/titanic/app/use_cases/crew_smith_captain_interactor.py.tmp.16648.f637db2e5784",
     "vault/Pasted image 20260617152149.png",
     "vault/이미지/Pasted image 20260617105911.png",
     "vault/이미지/Pasted image 20260617105633.png",
@@ -213,19 +226,6 @@
     "paik/_claude/CLAUDE.md",
     "paik/CLAUDE.md",
     "paik/README.md",
-    "paik/_claude/ENTITY_RULE.md",
-    "CURSOR.md",
-    "www/CLAUDE.md",
-    "paik/apps/titanic/_docs/FORMA_ERD.md",
-    "paik/apps/titanic/_docs/fastapi_project_context.md",
-    "paik/apps/titanic/_docs/TITANIC_ERD.md",
-    "vault/frontend/code_graph.md",
-    "vault/code_graph.md",
-    "vault/backend/TITANIC_ERD.md",
-    "vault/backend/FORMA_ERD.md",
-    "vault/frontend/REACT_RULES.md",
-    "vault/frontend/FASTAPI_RULES.md",
-    "vault/97-wiki/REACT_RULES.md",
-    "vault/94-wiki/REACT_RULES.md"
+    "paik/_claude/ENTITY_RULE.md"
   ]
 }
