@@ -38,5 +38,14 @@
       api:
         condition: service_healthy  # api 헬스체크 통과 후 web 실행
 
+  # n8n 워크플로우 자동화
+  n8n:
+    image: n8nio/n8n
+    ports:
+      - "5678:5678"
+    volumes:
+      - n8n_data:/home/node/.n8n
+
 volumes:
   web_node_modules:
+  n8n_data:
