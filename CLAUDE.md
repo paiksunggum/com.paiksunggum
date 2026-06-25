@@ -136,6 +136,33 @@ com.paiksunggum/              ← 루트 (git: com.ragwatson)
 
 ---
 
+## 5. 코드 작성 후 필수 실행 (하네스 체크)
+
+**린터 에러는 절대 무시하지 않는다. 에러 발생 시 반드시 수정 후 완료 보고한다.**
+
+### Python (paik/) 작업 후
+```bash
+ruff check . --fix   # 린트 자동 수정
+ruff format .        # 포맷
+python scripts/validate_topology.py   # 스타 토폴로지 위반 검사
+```
+
+### Next.js (www/) 작업 후
+```bash
+pnpm lint            # ESLint
+```
+
+### 타입 체크 (선택, 신규 모듈 작성 시 권장)
+```bash
+# paik/
+mypy .
+
+# www/ — TypeScript 컴파일 검사
+pnpm build --dry-run
+```
+
+---
+
 ## 7. Git / 서브모듈 규칙
 
 ```
@@ -172,6 +199,59 @@ npm run dev          # 포트 3000
 2. 잘못된 방향(예: 라우터에서 DB 직접 접근)이면 **어떤 원칙에 어긋나는지** 설명하고 올바른 방향을 안내한다.
 3. 새 모듈을 만들 때는 **titanic 모듈을 레퍼런스**로 제시한다.
 4. 과도기적 코드(아직 리팩터 안 된 부분)는 임의로 고치지 않고, 사용자가 학습할 준비가 됐을 때 함께 리팩터한다.
+
+---
+
+## 10. 스타 토폴로지 + 온톨로지 아키텍처
+
+### 개요
+FastAPI 백엔드는 **모듈러 모놀리식(Modular Monolith)** 구조다.  
+`apps/` 안의 모든 도메인 모듈은 두 역할 중 하나를 갖는다.
+
+| 역할 | 모듈 | 설명 |
+|------|------|------|
+| **Hub (허브)** | `apps/star_craft` | 지식의 교차점, 컨텍스트 라우팅, 전역 인덱스 관리 |
+| **Spoke (스포크)** | 나머지 모든 `apps/*` | 독립 도메인, 허브에만 연결 |
+
+### 의존성 규칙 (강제 사항)
+
+```
+✅ 허용               ❌ 금지
+─────────────────     ──────────────────────────────
+spoke → hub           spoke → spoke (직접 참조)
+spoke → core          hub   → spoke (역방향 결합)
+hub   → core
+```
+
+스포크 간 데이터가 필요하면 반드시 `star_craft` 허브를 경유해야 한다.
+
+### 하네스 엔지니어링 도구
+
+```bash
+# Python import 토폴로지 검증 (AST 기반, 설치 불필요)
+python scripts/validate_topology.py
+
+# MD 온톨로지 구조 검증 (Obsidian WikiLink [[]] 파싱)
+python scripts/validate_md_ontology.py --path .
+
+# import-linter (정적 분석, 설치 필요: pip install import-linter)
+lint-imports
+```
+
+### MD 파일 프론트매터 규칙
+
+온톨로지 노드로 관리되는 MD 파일은 아래 YAML 프론트매터를 반드시 포함해야 한다.  
+WikiLink는 **Obsidian 양식 `[[파일명]]`** 을 사용한다.
+
+```yaml
+---
+type: hub          # hub 또는 spoke
+title: 문서 제목
+links: []          # 명시적 연결 노드 목록 (WikiLink와 별개)
+---
+
+본문에서 [[다른노드]] 형식으로 링크
+```
 
 ---
 
