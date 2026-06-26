@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "f244422016063e63",
+        "id": "ba63c9246b51b2de",
         "type": "tabs",
         "children": [
           {
-            "id": "dbb70dd212c77ad8",
+            "id": "daa6b18df7dbb8f2",
             "type": "leaf",
             "state": {
               "type": "empty",
@@ -179,8 +179,9 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "563ffe7d8a4caf73",
+  "active": "daa6b18df7dbb8f2",
   "lastOpenFiles": [
+    "무제.md",
     "_docs",
     "www/_docs/REACT_RULES.md",
     "www/_docs/graph-color-groups.md",
@@ -204,7 +205,6 @@
     "paik/apps/titanic/app/use_cases/passenger_jack_trainer_interactor.py.tmp.16648.934d8947852c",
     "paik/apps/titanic/app/use_cases/__pycache__/passenger_jack_trainer_interactor.cpython-313.pyc.132949988135040",
     "paik/apps/titanic/app/use_cases/passenger_jack_trainer_interactor.py.tmp.16648.a69c14826c01",
-    "paik/apps/titanic/app/use_cases/__pycache__/crew_smith_captain_interactor.cpython-313.pyc.133110105705616",
     "vault/Pasted image 20260617152149.png",
     "vault/이미지/Pasted image 20260617105911.png",
     "vault/이미지/Pasted image 20260617105633.png",
